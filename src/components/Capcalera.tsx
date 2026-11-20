@@ -20,7 +20,7 @@ type Props = {
 
 export function Capcalera({ preferits = 0, onObrirMenu }: Props) {
   return (
-    <AppBar position="sticky" color="secondary">
+    <AppBar id="top" position="sticky" color="secondary">
       <Toolbar>
         <IconButton
           color="inherit"

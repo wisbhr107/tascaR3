@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Container, Typography } from '@mui/material';
-// FORAT 11.1 · importa Alert i Snackbar de MUI
+import { Alert, Container, Snackbar, Typography } from '@mui/material';
 import { Capcalera } from './components/Capcalera';
 import { Presentacio } from './components/Presentacio';
 import { Cercador } from './components/Cercador';
@@ -16,8 +15,8 @@ export default function App() {
   const [familia, setFamilia] = useState<Familia | 'Totes'>('Totes');
   const [preferits, setPreferits] = useState<Set<number>>(new Set());
   const [menuObert, setMenuObert] = useState(false);
-  // FORAT 10.3 · estat del curs obert
-  // FORAT 11.2 · estat del missatge
+  const [cursObert, setCursObert] = useState<Curs | null>(null);
+  const [missatge, setMissatge] = useState<string | null>(null);
 
   // --- Dades derivades ---
   const cursosFiltrats = cursos.filter((c) =>
@@ -34,7 +33,10 @@ export default function App() {
       return nous;
     });
   };
-  // FORAT 10.4 · inscriu
+  const inscriu = (curs: Curs) => {
+    setCursObert(null);
+    setMissatge(`T’has inscrit a «${curs.nom}». Rebràs un correu amb els detalls.`);
+  };
 
   return (
     <>
@@ -60,14 +62,27 @@ export default function App() {
           cursos={cursosFiltrats}
           preferits={preferits}
           onPreferit={canviaPreferit}
-          // FORAT 10.5 · prop onDetall
+          onDetall={setCursObert}
         />
       </Container>
 
       <PeuDePagina />
 
-      {/* FORAT 10.6 · el diàleg amb la fitxa del curs */}
-      {/* FORAT 11.4 · l'avís d'inscripció */}
+      <DetallCurs
+        curs={cursObert}
+        onTancar={() => setCursObert(null)}
+        onInscriure={inscriu}
+      />
+      <Snackbar
+        open={missatge !== null}
+        autoHideDuration={4000}
+        onClose={() => setMissatge(null)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert severity="success" variant="filled" onClose={() => setMissatge(null)}>
+          {missatge}
+        </Alert>
+      </Snackbar>
     </>
   );
 }

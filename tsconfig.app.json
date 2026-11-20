@@ -17,8 +17,8 @@
     "jsx": "react-jsx",
 
     /* Linting */
-    "noUnusedLocals": false, // desactivat: mentre hi ha forats queden imports sense fer servir
-    "noUnusedParameters": false, // ídem amb les props
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
