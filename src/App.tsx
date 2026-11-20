@@ -12,15 +12,18 @@ import { cursos, type Curs, type Familia } from './dades/cursos';
 
 export default function App() {
   // --- Estat de la pàgina (viu a App perquè el comparteixen diversos fills) ---
-  // FORAT 6.3 · estat del text del cercador
-  // FORAT 7.3 · estat de la família
+  const [text, setText] = useState('');
+  const [familia, setFamilia] = useState<Familia | 'Totes'>('Totes');
   // FORAT 8.1 · estat dels preferits
   // FORAT 9.4 · estat del menú lateral
   // FORAT 10.3 · estat del curs obert
   // FORAT 11.2 · estat del missatge
 
   // --- Dades derivades ---
-  const cursosFiltrats = cursos; // FORAT 6.4 · el filtre
+  const cursosFiltrats = cursos.filter((c) =>
+    c.nom.toLowerCase().includes(text.toLowerCase()) &&
+    (familia === 'Totes' || c.familia === familia),
+  );
 
   // --- Accions ---
   // FORAT 8.2 · canviaPreferit
@@ -40,7 +43,7 @@ export default function App() {
         <Typography variant="h4" component="h2" gutterBottom>
           Catàleg de cursos
         </Typography>
-        {/* FORAT 6.5 · el cercador */}
+        <Cercador text={text} onText={setText} familia={familia} onFamilia={setFamilia} />
         <LlistaCursos
           cursos={cursosFiltrats}
           // FORAT 8.4 · props preferits i onPreferit
