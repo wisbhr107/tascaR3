@@ -14,8 +14,8 @@ export default function App() {
   // --- Estat de la pàgina (viu a App perquè el comparteixen diversos fills) ---
   const [text, setText] = useState('');
   const [familia, setFamilia] = useState<Familia | 'Totes'>('Totes');
-  // FORAT 8.1 · estat dels preferits
-  // FORAT 9.4 · estat del menú lateral
+  const [preferits, setPreferits] = useState<Set<number>>(new Set());
+  const [menuObert, setMenuObert] = useState(false);
   // FORAT 10.3 · estat del curs obert
   // FORAT 11.2 · estat del missatge
 
@@ -26,16 +26,28 @@ export default function App() {
   );
 
   // --- Accions ---
-  // FORAT 8.2 · canviaPreferit
+  const canviaPreferit = (id: number) => {
+    setPreferits((anteriors) => {
+      const nous = new Set(anteriors);
+      if (nous.has(id)) nous.delete(id);
+      else nous.add(id);
+      return nous;
+    });
+  };
   // FORAT 10.4 · inscriu
 
   return (
     <>
       <Capcalera
-        // FORAT 8.3 · prop preferits
-        // FORAT 9.5 · prop onObrirMenu
+        preferits={preferits.size}
+        onObrirMenu={() => setMenuObert(true)}
       />
-      {/* FORAT 9.6 · el menú lateral */}
+      <MenuLateral
+        obert={menuObert}
+        onTancar={() => setMenuObert(false)}
+        familia={familia}
+        onFamilia={setFamilia}
+      />
 
       <Presentacio />
 
@@ -46,7 +58,8 @@ export default function App() {
         <Cercador text={text} onText={setText} familia={familia} onFamilia={setFamilia} />
         <LlistaCursos
           cursos={cursosFiltrats}
-          // FORAT 8.4 · props preferits i onPreferit
+          preferits={preferits}
+          onPreferit={canviaPreferit}
           // FORAT 10.5 · prop onDetall
         />
       </Container>
